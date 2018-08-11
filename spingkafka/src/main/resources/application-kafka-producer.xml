@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <bean id="producerConfig" class="java.util.HashMap">
+        <constructor-arg>
+            <map>
+                <entry key="bootstrap.servers" value="node1:9092,node2:9092"/>
+                <!--设置json序列化-->
+                <entry key="key.serializer" value="org.springframework.kafka.support.serializer.JsonSerializer"/>
+                <entry key="value.serializer" value="org.springframework.kafka.support.serializer.JsonSerializer"/>
+            </map>
+        </constructor-arg>
+    </bean>
+
+    <!-- 定义生产者的工厂 -->
+    <bean id="producerFactory" class="org.springframework.kafka.core.DefaultKafkaProducerFactory">
+        <constructor-arg ref="producerConfig"/>
+    </bean>
+
+    <!-- 定义KafkaTemplate,通过KafkaTemplate即可实现发送消息等功能 -->
+    <bean class="org.springframework.kafka.core.KafkaTemplate">
+        <constructor-arg index="0" ref="producerFactory"/>
+        <!--指定默认的topic-->
+        <property name="defaultTopic" value="kafka-topic"/>
+    </bean>
+
+</beans>
