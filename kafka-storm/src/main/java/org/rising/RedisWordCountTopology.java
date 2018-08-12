@@ -4,6 +4,7 @@ import org.apache.storm.Config;
 import org.apache.storm.LocalCluster;
 import org.apache.storm.generated.StormTopology;
 import org.apache.storm.topology.TopologyBuilder;
+import org.apache.storm.tuple.Fields;
 
 public class RedisWordCountTopology {
     public static void main(String[] args) {
@@ -13,8 +14,8 @@ public class RedisWordCountTopology {
         // 第二步，设置spout和bolt
         // 设置线程数为2,Tasks数为2
         builder.setSpout("randomSentenceSpout", new RandomSentenceSpout(), 2).setNumTasks(2);
-        builder.setBolt("splitSentenceBolt", new SplitSentenceBolt()).shuffleGrouping("randomSentenceSpout").setNumTasks(4);
-        builder.setBolt("wordCountBolt", new WordCountBolt()).shuffleGrouping("splitSentenceBolt");
+        builder.setBolt("splitSentenceBolt", new SplitSentenceBolt(), 4).localOrShuffleGrouping("randomSentenceSpout").setNumTasks(4);
+        builder.setBolt("wordCountBolt", new WordCountBolt(), 2).partialKeyGrouping("splitSentenceBolt", new Fields("word")).setNumTasks(2);
 //        builder.setBolt("printBolt", new PrintBolt()).shuffleGrouping("wordCountBolt");
         builder.setBolt("redis", new RedisBolt()).localOrShuffleGrouping("wordCountBolt");
 

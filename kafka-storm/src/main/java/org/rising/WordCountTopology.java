@@ -12,10 +12,10 @@ public class WordCountTopology {
         TopologyBuilder builder = new TopologyBuilder();
 
         // 第二步，设置spout和bolt
-        // 设置线程数为2,Tasks数为2
+        // 设置线程数为2（也就是并行度数，但是并不是topology的并行度，是在worker执行的线程）,Tasks数为2
         builder.setSpout("randomSentenceSpout", new RandomSentenceSpout(), 2).setNumTasks(2);
         builder.setBolt("splitSentenceBolt", new SplitSentenceBolt(), 4).shuffleGrouping("randomSentenceSpout").setNumTasks(4);
-        builder.setBolt("wordCountBolt", new WordCountBolt(), 2).partialKeyGrouping("splitSentenceBolt", new Fields("word"));
+        builder.setBolt("wordCountBolt", new WordCountBolt(), 2).partialKeyGrouping("splitSentenceBolt", new Fields("word")).setNumTasks(2);
         builder.setBolt("printBolt", new PrintBolt()).shuffleGrouping("wordCountBolt");
 
         // 第三步，构建Topology对象

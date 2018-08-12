@@ -12,6 +12,7 @@ import redis.clients.jedis.JedisPoolConfig;
 import java.util.Map;
 
 public class RedisBolt extends BaseRichBolt {
+    // 创建JedisPool
     private JedisPool jedisPool;
 
     public void prepare(Map map, TopologyContext topologyContext, OutputCollector outputCollector) {
