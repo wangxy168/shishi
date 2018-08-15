@@ -13,6 +13,34 @@ import java.util.Properties;
  */
 public class OrderProducer {
 
+    // 测试生产者
+    @Test
+    public void testProducer() throws InterruptedException {
+        Properties conf = new Properties();
+
+        // 设置kafka服务列表，多个用逗号分隔
+        conf.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "node1:9092,node2:9092");
+        // 设置序列化消息key类
+        conf.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+        // 设置序列化消息value的类
+        conf.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+
+        // 初始化
+        KafkaProducer<String, String> kafkaProducer = new KafkaProducer<String, String>(conf);
+
+        for (int i = 0; i < 100; i++) {
+            // 发送数据，需要一个ProducerRecord对象，最少的参数：String topic, V value
+            ProducerRecord record = new ProducerRecord("kafka-topic", "data........" + i);
+            // 发送消息
+            kafkaProducer.send(record);
+            System.out.println("发送消息" + i);
+            Thread.sleep(100);
+        }
+
+        kafkaProducer.close();
+
+    }
+
     public static void main(String[] args) throws InterruptedException {
         /**
          *  1，连接集群，通过配置文件的方式
@@ -39,33 +67,6 @@ public class OrderProducer {
             kafkaProducer.send(new ProducerRecord<String, String>("my-kafka-topic", "发送信息" + i));
             Thread.sleep(100);
         }
-    }
-
-    // 测试生产者
-    @Test
-    public void testProducer() throws InterruptedException {
-        Properties conf = new Properties();
-
-        // 设置kafka服务列表，多个用逗号分隔
-        conf.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "node1:9092,node2:9092");
-        // 设置序列化消息key类
-        conf.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-        // 设置序列化消息value的类
-        conf.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-
-        // 初始化
-        KafkaProducer<String, String> kafkaProducer = new KafkaProducer<String, String>(conf);
-
-        for (int i = 0; i < 100; i++) {
-            ProducerRecord record = new ProducerRecord("kafka-topic", "data........" + i);
-            // 发送消息
-            kafkaProducer.send(record);
-            System.out.println("发送消息" + i);
-            Thread.sleep(100);
-        }
-
-        kafkaProducer.close();
-
     }
 
 }

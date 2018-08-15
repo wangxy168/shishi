@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <bean id="consumerConfig" class="java.util.HashMap">
+        <constructor-arg>
+            <map>
+                <entry key="bootstrap.servers" value="node01:9092,node02:9092"/>
+                <entry key="group.id" value="my-group-spring-spring-3"/>
+                <entry key="client.id" value="my-test-client-spring-3"/>
+                <entry key="enable.auto.commit" value="true"/>
+                <entry key="auto.commit.interval.ms" value="1000"/>
+                <!--反序列化器，这里要注意设置的是字符串的反序列化-->
+                <entry key="key.deserializer" value="org.apache.kafka.common.serialization.StringDeserializer"/>
+                <entry key="value.deserializer" value="org.apache.kafka.common.serialization.StringDeserializer"/>
+            </map>
+        </constructor-arg>
+    </bean>
+
+    <!-- 定义消费者的工厂 -->
+    <bean id="consumerFactory" class="org.springframework.kafka.core.DefaultKafkaConsumerFactory">
+        <constructor-arg ref="consumerConfig"/>
+    </bean>
+
+    <!--定义消息监听器，用于接收消息-->
+    <bean id="myMessageListener" class="org.rising.MyMessageListener"/>
+
+    <bean id="containerProperties" class="org.springframework.kafka.listener.config.ContainerProperties">
+        <!--设置消费的topic，这里可以指定多个topic-->
+        <constructor-arg value="my-kafka-topic" type="java.lang.String[]"/>
+        <property name="messageListener" ref="myMessageListener"/>
+    </bean>
+
+    <!--创建Listener容器-->
+    <bean class="org.springframework.kafka.listener.KafkaMessageListenerContainer" init-method="start">
+        <constructor-arg index="0" ref="consumerFactory"/>
+        <constructor-arg index="1" ref="containerProperties"/>
+    </bean>
+
+</beans>

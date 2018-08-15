@@ -10,9 +10,10 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>kafka01</module>
-        <module>spingkafka</module>
-        <module>kafka-storm</module>
-        <module>wd-web-storm</module>
+        <module>storm-wd-web</module>
+        <module>dashboard-palm</module>
+        <module>storm</module>
+        <module>kafka-sping</module>
     </modules>
 
 </project>

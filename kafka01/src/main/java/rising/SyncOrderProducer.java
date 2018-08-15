@@ -29,7 +29,6 @@ public class SyncOrderProducer {
         // 等待时间
         conf.setProperty(ProducerConfig.LINGER_MS_CONFIG, "10000");
 
-
         // 初始化
         KafkaProducer<String, String> kafkaProducer = new KafkaProducer<String, String>(conf);
 
@@ -64,7 +63,6 @@ public class SyncOrderProducer {
 //        conf.setProperty(ProducerConfig.BATCH_SIZE_CONFIG, "1000");
         // 等待时间
 //        conf.setProperty(ProducerConfig.LINGER_MS_CONFIG, "10000");
-
 
         // 初始化
         KafkaProducer<String, String> kafkaProducer = new KafkaProducer<String, String>(conf);

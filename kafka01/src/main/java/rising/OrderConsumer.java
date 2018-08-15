@@ -14,30 +14,6 @@ import java.util.Properties;
  * 消费订单数据
  */
 public class OrderConsumer {
-    public static void main(String[] args) {
-        // 1，连接集群
-        Properties properties = new Properties();
-        properties.put("bootstrap.servers", "node1:9092");
-        properties.put("group.id", "my-kafka-topic");
-        properties.put("enable.auto.commit", "true");
-        properties.put("auto.commit.interval.ms", "1000");
-        properties.put("key.deserializer",
-                "org.apache.kafka.common.serialization.StringDeserializer");
-        properties.put("value.deserializer",
-                "org.apache.kafka.common.serialization.StringDeserializer");
-
-        KafkaConsumer<String, String> kafkaConsumer = new KafkaConsumer<String, String>(properties);
-        // 2，发送数据，需要订阅模式下的topic，order1
-        kafkaConsumer.subscribe(Arrays.asList("my-kafka-topic"));
-        while (true) {
-            // jdk queue offer插入，poll获取数据，blooking queue插入元素，take获取元素
-            ConsumerRecords<String, String> consumerRecords = kafkaConsumer.poll(100);
-            for (ConsumerRecord<String, String> record : consumerRecords) {
-                System.out.println("消费数据为：" + record.value());
-            }
-        }
-
-    }
 
     // 测试消费者
     @Test
@@ -77,7 +53,6 @@ public class OrderConsumer {
         }
     }
 
-
     // 测试消费者
     @Test
     public void testConsumer2() {
@@ -116,4 +91,30 @@ public class OrderConsumer {
         }
 
     }
+
+    public static void main(String[] args) {
+        // 1，连接集群
+        Properties properties = new Properties();
+        properties.put("bootstrap.servers", "node1:9092");
+        properties.put("group.id", "my-kafka-topic");
+        properties.put("enable.auto.commit", "true");
+        properties.put("auto.commit.interval.ms", "1000");
+        properties.put("key.deserializer",
+                "org.apache.kafka.common.serialization.StringDeserializer");
+        properties.put("value.deserializer",
+                "org.apache.kafka.common.serialization.StringDeserializer");
+
+        KafkaConsumer<String, String> kafkaConsumer = new KafkaConsumer<String, String>(properties);
+        // 2，发送数据，需要订阅模式下的topic，order1
+        kafkaConsumer.subscribe(Arrays.asList("my-kafka-topic"));
+        while (true) {
+            // jdk queue offer插入，poll获取数据，blooking queue插入元素，take获取元素
+            ConsumerRecords<String, String> consumerRecords = kafkaConsumer.poll(100);
+            for (ConsumerRecord<String, String> record : consumerRecords) {
+                System.out.println("消费数据为：" + record.value());
+            }
+        }
+
+    }
+
 }

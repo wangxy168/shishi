@@ -7,16 +7,18 @@ import org.junit.Test;
 
 import java.util.Properties;
 
+/**
+ * 创建topic
+ */
 public class OrderTopic {
 
-    // 创建topic
     @Test
     public void testTopic() {
         ZkUtils zkUtils = null;
         try {
             // 参数：zookeeper地址，session超时时间，连接超时时间，是否启用zookeeper安全机制
             zkUtils=ZkUtils.apply("node1:2181", 30000, 3000, JaasUtils.isZkSecurityEnabled());
-
+            // topic名称
             String topicName = "kafka-topic";
             if (!AdminUtils.topicExists(zkUtils, topicName)) {
                 // 参数：zkUtils，topic名称，partition数量，副本数量，参数，机架感知模式

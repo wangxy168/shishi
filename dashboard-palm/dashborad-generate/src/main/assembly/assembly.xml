@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly>
+    <id>bin</id>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <formats>
+        <!--仅仅只是打包-->
+        <format>tar</format>
+    </formats>
+    <dependencySets>
+        <dependencySet>
+            <useProjectArtifact>false</useProjectArtifact>
+            <outputDirectory>lib</outputDirectory>
+        </dependencySet>
+    </dependencySets>
+    <fileSets>
+        <fileSet>
+            <!--指定目录-->
+            <directory>src/main/resources</directory>
+            <outputDirectory>/config</outputDirectory>
+            <filtered>true</filtered>
+        </fileSet>
+        <fileSet>
+            <!--指定目录-->
+            <directory>src/main/scripts</directory>
+            <outputDirectory>/bin</outputDirectory>
+            <includes>
+                <!--处理handler.sh-->
+                <include>handler.sh</include>
+            </includes>
+            <lineEnding>unix</lineEnding>
+            <filtered>true</filtered>
+        </fileSet>
+        <fileSet>
+            <!--把java程序打包，输出到此目录中-->
+            <directory>${publish}</directory>
+            <outputDirectory>/</outputDirectory>
+            <includes>
+                <include>*.jar</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+</assembly>
